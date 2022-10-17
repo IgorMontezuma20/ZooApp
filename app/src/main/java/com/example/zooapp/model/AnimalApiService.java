@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AnimalApiService {
 
-    private static final String BASE_URL = "https://us-central1-apis-476e.cloudfunctions.net";
+    private static final String BASE_URL = "https://us-central1-apis-4674e.cloudfunctions.net";
 
     AnimalApi api = new Retrofit.Builder()
             .baseUrl(BASE_URL)
