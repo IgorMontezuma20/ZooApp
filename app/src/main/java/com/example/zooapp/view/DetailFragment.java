@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -22,6 +23,7 @@ import com.example.zooapp.R;
 import com.example.zooapp.databinding.FragmentDetailBinding;
 import com.example.zooapp.databinding.FragmentListBinding;
 import com.example.zooapp.model.AnimalModel;
+import com.example.zooapp.model.AnimalPalette;
 import com.example.zooapp.util.Util;
 
 
@@ -41,9 +43,8 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
 
-        binding = FragmentDetailBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
-        return view;
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false);
+        return binding.getRoot();
 
     }
 
@@ -57,19 +58,15 @@ public class DetailFragment extends Fragment {
 
         if (animal != null) {
 
-            binding.animalName.setText(animal.name);
-            binding.animalLocation.setText(animal.location);
-            binding.animalDiet.setText(animal.diet);
-            binding.animalLifespan.setText(animal.lifeSpan);
+            binding.setAnimal(animal);
 
-            Util.loadImage(binding.animalImage, animal.imageUrl, Util.getProgressDrawable(binding.animalImage.getContext()));
             setupBackgroundColor(animal.imageUrl);
         }
 
     }
 
     private void setupBackgroundColor(String url) {
-        Glide.with(this )
+        Glide.with(this)
                 .asBitmap()
                 .load(url)
                 .into(new CustomTarget<Bitmap>() {
@@ -78,9 +75,10 @@ public class DetailFragment extends Fragment {
                         Palette.from(resource)
                                 .generate(palette -> {
                                     Palette.Swatch color = palette.getLightMutedSwatch();
-                                    if(color != null) {
+                                    if (color != null) {
                                         int intColor = palette.getLightMutedSwatch().getRgb();
-                                        binding.animalLinearLayout.setBackgroundColor(intColor);
+                                        AnimalPalette animalPalette = new AnimalPalette(intColor);
+                                        binding.setPalette(animalPalette);
                                     }
                                 });
                     }
