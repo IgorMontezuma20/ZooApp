@@ -22,11 +22,11 @@ import com.example.zooapp.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.AnimalViewHolder> {
+public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.AnimalViewHolder> implements AnimalClickListener {
 
     private ArrayList<AnimalModel> animalList = new ArrayList<>();
 
-    public void updateAnimalList(List<AnimalModel> newAnimalList){
+    public void updateAnimalList(List<AnimalModel> newAnimalList) {
         animalList.clear();
         animalList.addAll(newAnimalList);
         notifyDataSetChanged();
@@ -42,17 +42,18 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.An
 
     @Override
     public void onBindViewHolder(@NonNull AnimalViewHolder holder, int position) {
-
-//        ImageView animalImage = holder.itemView.findViewById(R.id.animalImage);
-//        ConstraintLayout animalLayout = holder.itemView.findViewById(R.id.animalLayout);
-//
-//        Util.loadImage(animalImage, animalList.get(position).imageUrl, Util.getProgressDrawable(animalImage.getContext()));
-//        animalLayout.setOnClickListener(view -> {
-//            NavDirections action = ListFragmentDirections.actionGoToDetails(animalList.get(position));
-//            Navigation.findNavController(view).navigate(action);
-//        });
-
         holder.itemView.setAnimal(animalList.get(position));
+        holder.itemView.setListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        for (AnimalModel animal : animalList) {
+            if (v.getTag().equals(animal.name)) {
+                NavDirections action = ListFragmentDirections.actionGoToDetails(animal);
+                Navigation.findNavController(v).navigate(action);
+            }
+        }
     }
 
     @Override
@@ -60,11 +61,11 @@ public class AnimalListAdapter extends RecyclerView.Adapter<AnimalListAdapter.An
         return animalList.size();
     }
 
-    class AnimalViewHolder extends RecyclerView.ViewHolder{
+    class AnimalViewHolder extends RecyclerView.ViewHolder {
 
         ItemAnimalBinding itemView;
 
-        public AnimalViewHolder(ItemAnimalBinding view){
+        public AnimalViewHolder(ItemAnimalBinding view) {
 
             super(view.getRoot());
             itemView = view;
