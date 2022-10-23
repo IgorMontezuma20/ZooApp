@@ -3,6 +3,7 @@ package com.example.zooapp.util;
 import android.content.Context;
 import android.widget.ImageView;
 
+import androidx.databinding.BindingAdapter;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
@@ -11,7 +12,7 @@ import com.example.zooapp.R;
 
 public class Util {
 
-    public static void loadImage(ImageView imageView, String url, CircularProgressDrawable circularProgressDrawable){
+    public static void loadImage(ImageView imageView, String url, CircularProgressDrawable circularProgressDrawable) {
 
         RequestOptions options = new RequestOptions()
                 .placeholder(circularProgressDrawable)
@@ -22,11 +23,16 @@ public class Util {
                 .into(imageView);
     }
 
-    public static CircularProgressDrawable getProgressDrawable(Context context){
+    public static CircularProgressDrawable getProgressDrawable(Context context) {
         CircularProgressDrawable cpd = new CircularProgressDrawable(context);
         cpd.setStrokeWidth(10f);
         cpd.setCenterRadius(50f);
         cpd.start();
         return cpd;
+    }
+
+    @BindingAdapter("android:imageUrl")
+    public static void loadImage(ImageView view, String url) {
+        loadImage(view, url, getProgressDrawable(view.getContext()));
     }
 }
