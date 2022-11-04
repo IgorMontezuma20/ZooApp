@@ -1,5 +1,7 @@
 package com.example.zooapp.viewmodel;
 
+import static com.example.zooapp.di.TypeOfContext.CONTEXT_APP;
+
 import android.app.Application;
 import android.widget.Toast;
 
@@ -7,7 +9,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.zooapp.di.AppModule;
 import com.example.zooapp.di.DaggerViewModelComponent;
+import com.example.zooapp.di.TypeOfContext;
 import com.example.zooapp.model.AnimalApiService;
 import com.example.zooapp.model.AnimalModel;
 import com.example.zooapp.model.ApiKeyModel;
@@ -32,15 +36,18 @@ public class ListViewModel extends AndroidViewModel {
     public MutableLiveData<Boolean> loadError = new MutableLiveData<Boolean>();
     public MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>();
 
-
-    private SharedPreferencesHelper prefs;
+    @Inject
+            @TypeOfContext(CONTEXT_APP)
+    SharedPreferencesHelper prefs;
 
     private Boolean invalidApiKey = false;
 
     public ListViewModel(Application application) {
         super(application);
-        prefs = new SharedPreferencesHelper(application);
-        DaggerViewModelComponent.create().inject(this);
+        DaggerViewModelComponent.builder()
+                .appModule(new AppModule(getApplication()))
+                .build()
+                .inject(this);
     }
 
     public void refresh() {
